@@ -1,0 +1,7 @@
+{"layout": "flow", "eyebrow": "evaboot-labs · cold-outreach-prompts", "headline": "Prompts, tested.",
+ "subline": "Eight cold outreach prompts, run on real leads, every output checked against the data.",
+ "nodes": [{"label": "01 · Leads", "title": "Evaboot", "caption": "One Sales Navigator export"},
+           {"label": "02 · Prompts", "title": "prompts/", "caption": "Eight jobs, hard limits"},
+           {"label": "03 · Write", "title": "Claude", "caption": "Text plus the facts it used"},
+           {"label": "04 · Check", "title": "prompts.py", "caption": "No invented facts, scored"}],
+ "spec": "facts from the data only · words, questions, banned phrases"}

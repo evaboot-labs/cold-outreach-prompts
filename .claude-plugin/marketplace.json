@@ -1,0 +1,14 @@
+{
+  "name": "evaboot-labs-cold-outreach-prompts",
+  "owner": { "name": "Evaboot", "url": "https://evaboot.com" },
+  "metadata": {
+    "description": "Cold outreach prompts, tested on real leads: every output checked for invented facts, length, questions and banned phrases."
+  },
+  "plugins": [
+    {
+      "name": "cold-outreach-prompts",
+      "source": "./",
+      "description": "Eight cold outreach prompts your AI Agent runs on real Evaboot leads, with every output checked against the lead's own data."
+    }
+  ]
+}

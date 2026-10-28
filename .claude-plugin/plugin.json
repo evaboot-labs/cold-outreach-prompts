@@ -1,0 +1,13 @@
+{
+  "name": "cold-outreach-prompts",
+  "version": "1.0.0",
+  "description": "Eight cold outreach prompts (first line, short email, subject lines, follow-up, break-up, LinkedIn note, objection reply, referral ask) your AI Agent runs on real Evaboot leads, with every output checked against the lead's own data.",
+  "author": { "name": "Evaboot", "url": "https://evaboot.com" },
+  "homepage": "https://evaboot.com/blog/ai-prompts-for-cold-outreach",
+  "repository": "https://github.com/evaboot-labs/cold-outreach-prompts",
+  "license": "MIT",
+  "privacyPolicyUrl": "https://evaboot.com/privacy-policy",
+  "keywords": ["cold-email", "ai-prompts", "outbound", "ai-agent", "evaboot", "n8n"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json"
+}

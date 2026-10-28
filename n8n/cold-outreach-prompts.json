@@ -1,0 +1,281 @@
+{
+  "name": "Cold outreach prompts, tested (Claude)",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Cold outreach prompt, tested",
+        "formDescription": "Pick a prompt and paste what you know about one lead, from an Evaboot export or the profile. Claude writes it; the check says if it used only these facts.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Prompt",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "First line from one fact"
+                  },
+                  {
+                    "option": "Short problem-first email"
+                  },
+                  {
+                    "option": "Three subject lines"
+                  },
+                  {
+                    "option": "Follow-up with a new angle"
+                  },
+                  {
+                    "option": "Last email that gives an easy out"
+                  },
+                  {
+                    "option": "LinkedIn connection note"
+                  },
+                  {
+                    "option": "Reply to \"we already have a provider\""
+                  },
+                  {
+                    "option": "Ask for the right person"
+                  }
+                ]
+              }
+            },
+            {
+              "fieldLabel": "First name",
+              "fieldType": "text",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Job title",
+              "fieldType": "text",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Company",
+              "fieldType": "text",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Industry",
+              "fieldType": "text",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Company size",
+              "fieldType": "text",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Months in role",
+              "fieldType": "text",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Company growth in 1 year (%)",
+              "fieldType": "text",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Headline",
+              "fieldType": "textarea",
+              "requiredField": false
+            },
+            {
+              "fieldLabel": "Company description",
+              "fieldType": "textarea",
+              "requiredField": false
+            }
+          ]
+        },
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "cb34a14d-1070-440d-90a3-106e18f0d1d8",
+      "name": "One lead, one prompt",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        0
+      ],
+      "webhookId": "e9a8eedd-1075-4327-82ad-f2e6399d4b05"
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Same as prompts.py run: the prompt, its hard limits, the offer and the rules.\nconst PROMPTS = [{\"id\": \"first-line\", \"name\": \"First line from one fact\", \"channel\": \"email\", \"max_words\": \"25\", \"max_questions\": \"0\", \"text\": \"Write the opening line of a cold email to this person. Build it on ONE fact from their data (their role, months in the job, company growth, company description or headline). Say why that fact made you write. Do not pitch the product in this line. Do not flatter.\"}, {\"id\": \"short-email\", \"name\": \"Short problem-first email\", \"channel\": \"email\", \"max_words\": \"90\", \"max_questions\": \"1\", \"text\": \"Write a cold email body (no subject, no signature) to this person. Structure: one line on a fact from their data, one or two lines on the problem the offer solves for someone in their role, one line of proof from the offer, then one question as the call to action. Plain words, no buzzwords.\"}, {\"id\": \"subject-lines\", \"name\": \"Three subject lines\", \"channel\": \"email\", \"max_words\": \"18\", \"max_questions\": \"3\", \"min_facts\": \"0\", \"text\": \"Write three subject lines for a cold email to this person, one per line, each under six words, in lowercase like a note from a colleague. At least one refers to their company or role. No clickbait, no emoji, no \\\"re:\\\" or \\\"fwd:\\\".\"}, {\"id\": \"follow-up\", \"name\": \"Follow-up with a new angle\", \"channel\": \"email\", \"max_words\": \"60\", \"max_questions\": \"1\", \"text\": \"Write the second email of a sequence to this person, sent four days after a first email with no reply. Bring ONE new angle (a different problem, a different proof, or a different fact from their data). Never say you are following up or bumping the thread. End with one easy question.\"}, {\"id\": \"breakup\", \"name\": \"Last email that gives an easy out\", \"channel\": \"email\", \"max_words\": \"45\", \"max_questions\": \"1\", \"text\": \"Write the last email of a sequence to this person, after two emails with no reply. Be short and polite, give them an easy way to say no or to point you to someone else, and do not guilt them. Mention their company once.\"}, {\"id\": \"linkedin-note\", \"name\": \"LinkedIn connection note\", \"channel\": \"linkedin\", \"max_words\": \"50\", \"max_chars\": \"280\", \"max_questions\": \"1\", \"text\": \"Write a LinkedIn connection request note to this person, under 280 characters. Build it on one fact from their data and say why you want to connect. No pitch, no link, no meeting request.\"}, {\"id\": \"objection-reply\", \"name\": \"Reply to \\\"we already have a provider\\\"\", \"channel\": \"email\", \"max_words\": \"70\", \"max_questions\": \"1\", \"text\": \"This person replied to your cold email: \\\"Thanks, but we already have a data provider.\\\" Write your reply. Agree first, then offer one specific reason to compare (from the offer, not invented), and ask one low-effort question. Never argue, never criticise their provider.\"}, {\"id\": \"referral-ask\", \"name\": \"Ask for the right person\", \"channel\": \"email\", \"max_words\": \"50\", \"max_questions\": \"1\", \"text\": \"Write a short email asking this person who on their team owns outbound list building, in case it is not them. Use one fact from their data to show you looked. One question only.\"}], OFFER = {\"sender\": \"Roy, Evaboot\", \"product\": \"Evaboot exports LinkedIn Sales Navigator searches and lists to a clean spreadsheet with verified emails.\", \"for_who\": \"sales leaders who build outbound lists from Sales Navigator\", \"problem\": \"copying leads by hand from Sales Navigator, bounced emails and messy job titles\", \"proof\": \"more than 200,000 users (evaboot.com)\", \"call_to_action\": \"a 15-minute call, or a trial account\"}, RULES = \"Use ONLY the facts in the lead JSON and the offer. Never invent a number, a news item, a customer, a tool they use or anything you cannot see in the data. Never guess anyone's gender: use the first name, \\\"you\\\" or the role. Write in plain English, no emoji.\\n\\nReturn ONLY a JSON object: {\\\"text\\\": \\\"<the message>\\\", \\\"facts_used\\\": [\\\"<the value of each fact from the lead JSON you used, copied exactly, without its key>\\\"]}\", FIELDS = [[\"First name\", \"first_name\"], [\"Job title\", \"title\"], [\"Company\", \"company\"], [\"Industry\", \"industry\"], [\"Company size\", \"company_size\"], [\"Months in role\", \"months_in_role\"], [\"Company growth in 1 year (%)\", \"company_growth_1y_pct\"], [\"Headline\", \"headline\"], [\"Company description\", \"company_description\"]];\nconst f = $('One lead, one prompt').first().json;\nconst p = PROMPTS.find(x => x.name === f['Prompt']);\nconst lead = {};\nfor (const [label, key] of FIELDS) if (String(f[label] ?? '').trim()) lead[key] = String(f[label]).trim();\nconst limits = `Hard limits: at most ${p.max_words} words` + (p.max_chars ? ` and ${p.max_chars} characters` : '') + `, at most ${p.max_questions} question mark(s). Count before you answer.`;\nreturn [{ json: { prompt: p, lead, system: `${p.text}\\n\\n${limits}\\n\\nThe offer:\\n${JSON.stringify(OFFER, null, 1)}\\n\\n${RULES}`, user: JSON.stringify(lead) } }];\n"
+      },
+      "id": "510c350b-ccc8-4228-bb3a-6a5130803e24",
+      "name": "Build the prompt",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "hasOutputParser": true,
+        "text": "={{ $json.user }}",
+        "options": {
+          "systemMessage": "={{ $json.system }}",
+          "maxIterations": 3
+        }
+      },
+      "id": "a953e624-a82b-47bc-ac29-4b7386c8c037",
+      "name": "Write the message",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        440,
+        0
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 2000
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "claude-sonnet-5-5",
+          "cachedResultName": "claude-sonnet-5-5"
+        },
+        "options": {
+          "maxTokensToSample": 2000
+        }
+      },
+      "id": "a1c5d9ef-b4de-4408-9098-ab9cef0d7a80",
+      "name": "Claude",
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        400,
+        220
+      ],
+      "credentials": {
+        "anthropicApi": {
+          "id": "",
+          "name": "Anthropic"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"type\": \"object\",\n  \"required\": [\n    \"text\",\n    \"facts_used\"\n  ],\n  \"properties\": {\n    \"text\": {\n      \"type\": \"string\"\n    },\n    \"facts_used\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"string\"\n      }\n    }\n  }\n}"
+      },
+      "id": "b47d050a-33df-492c-b13a-96d18caee01c",
+      "name": "Message",
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "\n// Same as prompts.py check.\nconst BANNED = [\"hope this email finds you\", \"hope you're well\", \"just following up\", \"following up on\", \"bumping this\", \"circle back\", \"touch base\", \"quick question\", \"game-changer\", \"game changer\", \"revolutionize\", \"revolutionise\", \"synergy\", \"leverage\", \"cutting-edge\", \"best-in-class\", \"i wanted to reach out\", \"free\", \"guarantee\", \"100%\", \"act now\", \"limited time\"];\nconst { prompt: p, lead } = $('Build the prompt').first().json;\nconst out = $json.output || {};\nconst text = String(out.text || ''), used = out.facts_used || [];\nconst norm = s => String(s).toLowerCase().replace(/[^a-z0-9%]+/g, ' ').trim();\nconst data = norm(Object.values(lead).join(' ')), offer = norm(\"Roy, Evaboot Evaboot exports LinkedIn Sales Navigator searches and lists to a clean spreadsheet with verified emails. sales leaders who build outbound lists from Sales Navigator copying leads by hand from Sales Navigator, bounced emails and messy job titles more than 200,000 users (evaboot.com) a 15-minute call, or a trial account\");\nconst problems = [];\nconst words = text.split(/\\s+/).filter(Boolean).length;\nif (words > +p.max_words) problems.push(`${words} words, max ${p.max_words}`);\nif (p.max_chars && text.length > +p.max_chars) problems.push(`${text.length} characters, max ${p.max_chars}`);\nconst q = (text.match(/\\?/g) || []).length;\nif (q > +p.max_questions) problems.push(`${q} questions, max ${p.max_questions}`);\nfor (const b of BANNED) if (new RegExp('(?<![a-z])' + b.replace(/[.*+?^${}()|[\\]\\\\]/g, '\\\\$&') + '(?![a-z])').test(text.toLowerCase())) problems.push('banned phrase: ' + b);\nif (/\\b(he|she|him|her|his|hers)\\b/i.test(text)) problems.push('guesses a gender');\nif (used.length < +(p.min_facts ?? 1)) problems.push(\"uses no fact from the lead's data\");\nfor (let fact of used) { fact = String(fact).replace(/^\\W*[a-z_0-9]+\\W*:\\s*/, '').replace(/^\"|\"$/g, '');\n  if (norm(fact) && !data.includes(norm(fact)) && !offer.includes(norm(fact))) problems.push('claims a fact that is not in the data: ' + fact.slice(0, 60)); }\nfor (const num of text.match(/\\d[\\d,.]*%?/g) || []) { const n = norm(num).replace(/ /g, '').replace(/%$/, '');\n  if (n && !data.replace(/ /g, '').includes(n) && !offer.replace(/ /g, '').includes(n)) problems.push('number not in the data or the offer: ' + num); }\nreturn [{ json: { prompt: p.name, text, facts_used: used.join(' | '), check: problems.length ? 'FAIL: ' + problems.join('; ') : 'OK' } }];\n"
+      },
+      "id": "ea327817-88f5-45ad-90e4-3932c0f569d3",
+      "name": "Check the message",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        720,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "completion",
+        "completionTitle": "={{ $json.prompt }}",
+        "completionMessage": "={{ $json.text }}\n\nFacts used: {{ $json.facts_used }}\n\nCheck: {{ $json.check }}",
+        "options": {}
+      },
+      "id": "189d504f-2a6c-4072-98d6-db08e40cfdfd",
+      "name": "Show the message",
+      "type": "n8n-nodes-base.form",
+      "typeVersion": 2.3,
+      "position": [
+        940,
+        0
+      ]
+    }
+  ],
+  "connections": {
+    "One lead, one prompt": {
+      "main": [
+        [
+          {
+            "node": "Build the prompt",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Build the prompt": {
+      "main": [
+        [
+          {
+            "node": "Write the message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write the message": {
+      "main": [
+        [
+          {
+            "node": "Check the message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check the message": {
+      "main": [
+        [
+          {
+            "node": "Show the message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Write the message",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Write the message",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "pinData": {}
+}
